@@ -1,0 +1,10 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+# gazelle:prefix github.com/JPCM-e-V/git-interfaces/redis-repo
+
+go_library(
+    name = "redis-repo",
+    srcs = glob(["*.go"]),
+    importpath = "github.com/JPCM-e-V/git-interfaces/redis-repo",
+    visibility = ["//visibility:public"],
+    deps = ["@com_github_go_redis_redis_v8//:redis"],
+)

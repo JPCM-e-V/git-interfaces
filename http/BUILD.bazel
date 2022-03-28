@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+# gazelle:prefix github.com/JPCM-e-V/git-interfaces/http
+
+go_binary(
+    name = "http",
+    embed = [":http_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_library(
+    name = "http_lib",
+    srcs = glob(["*.go"]),
+    importpath = "github.com/JPCM-e-V/git-interfaces/http",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//gitutils",
+        "//redis-repo",
+    ],
+)
