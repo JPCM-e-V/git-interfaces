@@ -81,7 +81,7 @@ func main() {
 			gitUploadPackHandler:     http.HandlerFunc(GitUploadPack),
 		},
 	}
-	fmt.Print("Running on http://localhost:8080")
+	fmt.Println("Running on http://localhost:8080")
 	log.Fatal(s.ListenAndServe())
 }
 
