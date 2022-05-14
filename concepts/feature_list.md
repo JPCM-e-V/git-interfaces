@@ -16,3 +16,4 @@
 * fast performance
 * (persistency)
 * scalability
+* portability
