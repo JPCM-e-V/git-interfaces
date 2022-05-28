@@ -1,10 +1,10 @@
 # Modules
 
-|Name|Provided interface|Used interfaces|
-|-|-|-|
-|git-interfaces-http|`git http protocol`|<ul><li>`git interfaces redis repo`</li><li>`git interfaces git utils`</li></ul>|
-|git-interfaces-redis-repo|`git interfaces redis repo`|<ul><li>`redis server`</li></ul>|
-|git-interfaces-git-utils|`git interfaces git utils`|<ul></ul>|
+|Name|Provided interface|Used interfaces|Assignee|
+|-|-|-|-|
+|git-interfaces-http|`git http protocol`|<ul><li>`git interfaces redis repo`</li><li>`git interfaces git utils`</li></ul>|@Informa-Tiger|
+|git-interfaces-redis-repo|`git interfaces redis repo`|<ul><li>`redis server`</li></ul>|@rpkak|
+|git-interfaces-git-utils|`git interfaces git utils`|<ul></ul>||
 
 
 # Interfaces
