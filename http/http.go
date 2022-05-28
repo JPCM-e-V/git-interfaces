@@ -52,20 +52,53 @@ func GitUploadPack(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GitReceivePackInfo(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(1)
+	w.Header().Set("Content-Type", "application/x-git-receive-pack-advertisement")
+	gitutils.WriteGitProtocol(w, []string{"# service=git-receive-pack"})
+	gitutils.WriteGitProtocol(w, []string{"0000000000000000000000000000000000000000 capabilities^{}\x00report-status"})
+
+	// gitutils.WriteGitProtocol(w, []string{"version 2", "ls-refs", "fetch"})
+}
+
+func GitReceivePack(w http.ResponseWriter, r *http.Request) {
+	lines, err := gitutils.ReadGitProtocol(r.Body)
+	fmt.Println(lines, err)
+
+	// buf := new(bytes.Buffer)
+	// gitutils.WriteGitProtocol(buf, []string{"unpack ok", "ok refs/heads/main"})
+	// fmt.Fprintf()
+	// gitutils.WriteGitProtocol(w, []string{"\x01" + buf.String()})
+	// fmt.fprint
+	// fmt.Fprintf(w, "%s\x01%s0000", gitutils.PktLine("unpack ok\n"), gitutils.PktLine("ok refs/heads/main\n"))
+	// fmt.Fprint(w, "\x30\x30\x30\x65\x75\x6e\x70\x61\x63\x6b\x20\x6f\x6b\x0a\x30\x30\x31\x37\x6f\x6b\x20\x72\x65\x66\x73\x2f\x68\x65\x61\x64\x73\x2f\x6d\x61\x69\x6e\x0a\x30\x30\x30\x30")
+	gitutils.WriteGitProtocol(w, []string{"unpack ok", "ok refs/heads/main"})
+}
+
 type GitHandler struct {
-	gitUploadPackInfoHandler http.Handler
-	gitUploadPackHandler     http.Handler
+	gitUploadPackInfoHandler  http.Handler
+	gitUploadPackHandler      http.Handler
+	gitReceivePackInfoHandler http.Handler
+	gitReceivePackHandler     http.Handler
 }
 
 func (g *GitHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	PrintRequest(r)
 	if r.Method == "GET" && r.URL.Path == "/info/refs" {
+		fmt.Println(r.URL.Query().Get("service"))
 		if r.URL.Query().Get("service") == "git-upload-pack" {
 			g.gitUploadPackInfoHandler.ServeHTTP(w, r)
 			return
 		}
+		if r.URL.Query().Get("service") == "git-receive-pack" {
+			g.gitReceivePackInfoHandler.ServeHTTP(w, r)
+			return
+		}
 	} else if r.Method == "POST" && r.URL.Path == "/git-upload-pack" {
 		g.gitUploadPackHandler.ServeHTTP(w, r)
+		return
+	} else if r.Method == "POST" && r.URL.Path == "/git-receive-pack" {
+		g.gitReceivePackHandler.ServeHTTP(w, r)
 		return
 	}
 	w.WriteHeader(404)
@@ -77,11 +110,13 @@ func main() {
 	var s *http.Server = &http.Server{
 		Addr: ":8080",
 		Handler: &GitHandler{
-			gitUploadPackInfoHandler: http.HandlerFunc(GitUploadPackInfo),
-			gitUploadPackHandler:     http.HandlerFunc(GitUploadPack),
+			gitUploadPackInfoHandler:  http.HandlerFunc(GitUploadPackInfo),
+			gitUploadPackHandler:      http.HandlerFunc(GitUploadPack),
+			gitReceivePackInfoHandler: http.HandlerFunc(GitReceivePackInfo),
+			gitReceivePackHandler:     http.HandlerFunc(GitReceivePack),
 		},
 	}
-	fmt.Print("Running on http://localhost:8080")
+	fmt.Println("Running on http://localhost:8080")
 	log.Fatal(s.ListenAndServe())
 }
 

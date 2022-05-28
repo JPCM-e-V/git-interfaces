@@ -18,11 +18,6 @@ func Init() {
 	redisclient = redis.NewClient(&redis.Options{Addr: "localhost:6379"})
 }
 
-func Test() {
-	println("Hello World!")
-	redisclient.Get(context.Background(), "a")
-}
-
 func LsRefs(repoName string) ([]string, error) {
 	var repoExistsCmd = redisclient.SIsMember(context.Background(), fmt.Sprintf("%s:repos", REPO_KEY), repoName)
 	if repoExistsCmd.Err() != nil && repoExistsCmd.Err() != redis.Nil {

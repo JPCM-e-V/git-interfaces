@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"strconv"
 	"strings"
 	"unicode"
@@ -17,22 +16,22 @@ const ResponseEndPkt = 2
 func PktLine(s string) string {
 	len_s := len(s)
 
-	if len_s > 65515 {
-		return PktLine("ERR To long response.")
+	if len_s > 65516 {
+		return PktLine("ERR To long response.\n")
 	}
 
 	for i := 0; i < len_s; i++ {
 		if s[i] > unicode.MaxASCII {
-			return PktLine("ERR Non ASCII character found.")
+			return PktLine("ERR Non ASCII character found.\n")
 		}
 	}
-	length := len_s + 5
-	return fmt.Sprintf("%04x%s\n", length, s)
+	length := len_s + 4
+	return fmt.Sprintf("%04x%s", length, s)
 }
 
-func WriteGitProtocol(w http.ResponseWriter, lines []string) {
+func WriteGitProtocol(w io.Writer, lines []string) {
 	for _, s := range lines {
-		fmt.Fprint(w, PktLine(s))
+		fmt.Fprint(w, PktLine(s+"\n"))
 	}
 	fmt.Fprint(w, "0000")
 }
@@ -62,7 +61,7 @@ func ReadGitProtocol(r io.ReadCloser) ([]string, error) {
 			} else if num == 3 {
 				return lines, errors.New("hex is 0003")
 			} else if num == FlushPkt {
-				lines = append(lines, "flush")
+				break
 			} else if num == DelimiterPkt {
 				lines = append(lines, "delimiter")
 			} else if num == ResponseEndPkt {
