@@ -1,9 +1,15 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 # gazelle:prefix github.com/JPCM-e-V/git-interfaces/gitutils
 
 go_library(
     name = "gitutils",
-    srcs = glob(["*.go"]),
+    srcs = ["gitutils.go"],
     importpath = "github.com/JPCM-e-V/git-interfaces/gitutils",
     visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "gitutils_test",
+    srcs = ["gitutils_test.go"],
+    embed = [":gitutils"],
 )
