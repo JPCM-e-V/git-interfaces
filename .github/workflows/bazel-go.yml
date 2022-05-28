@@ -1,0 +1,25 @@
+name: Bezel-Go
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    name: bazel-go-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: bazelbuild/setup-bazelisk@v2
+
+    - uses: actions/cache@v3
+      with:
+        path: "~/.cache/bazel"
+        key: bazel
+
+    - name: Test
+      run: bazel test redis-repo:redis-repo_test http:http_test gitutils:gitutils_test
+      shell: bash
