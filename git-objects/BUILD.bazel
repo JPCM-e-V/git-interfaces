@@ -1,0 +1,9 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "git-objects",
+    srcs = ["git-objects.go"],
+    importpath = "github.com/JPCM-e-V/git-interfaces/git-objects",
+    visibility = ["//visibility:public"],
+    deps = [],
+)
