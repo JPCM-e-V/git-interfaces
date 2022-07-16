@@ -1,6 +1,6 @@
 package main
 
-type GitObjectType int
+type GitObjectType uint8
 
 const (
 	commit GitObjectType = iota + 1
@@ -9,44 +9,47 @@ const (
 	tag
 )
 
-type GitObject struct {
-	objectId string
+type GitRef struct {
+	objectId   string
+	objectType GitObjectType
 }
 
 type Blob struct {
-	GitObject
+	GitRef
 	content string
 }
 
 type Tree struct {
-	GitObject
-	childTrees []Tree
-	childBlobs []Blob
+	GitRef
+	children []GitRef
 }
 
 type Commit struct {
-	GitObject
+	GitRef
 	author    Person
 	committer Person
-	parents   []Commit
-	tree      Tree
+	parents   []GitRef
+	tree      GitRef
 	message   string
 	gpgsig    string
 }
 
 type Tag struct {
-	GitObject
-	name      string
-	refType   GitObjectType
-	refObject *GitObject
-	message   string
-	gpgsig    string
-	tagger    Person
+	GitRef
+	name    string
+	ref     GitRef
+	message string
+	gpgsig  string
+	tagger  Person
 }
 
 type Person struct {
-	name          string
-	eMail         string
-	unknownNumber string
-	timezone      string
+	name      string
+	eMail     string
+	timestamp Timestamp
+}
+
+type Timestamp struct {
+	time     uint
+	timezone string
 }
