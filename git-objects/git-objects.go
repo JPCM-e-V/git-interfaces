@@ -9,35 +9,35 @@ const (
 	tag
 )
 
-type GitRef struct {
+type GitObjectAccessInfo struct {
 	objectId   string
 	objectType GitObjectType
 }
 
 type Blob struct {
-	GitRef
+	GitObjectAccessInfo
 	content string
 }
 
 type Tree struct {
-	GitRef
-	children []GitRef
+	GitObjectAccessInfo
+	children []GitObjectAccessInfo
 }
 
 type Commit struct {
-	GitRef
+	GitObjectAccessInfo
 	author    Person
 	committer Person
-	parents   []GitRef
-	tree      GitRef
+	parents   []GitObjectAccessInfo
+	tree      GitObjectAccessInfo
 	message   string
 	gpgsig    string
 }
 
 type Tag struct {
-	GitRef
+	GitObjectAccessInfo
 	name    string
-	ref     GitRef
+	ref     GitObjectAccessInfo
 	message string
 	gpgsig  string
 	tagger  Person
@@ -52,4 +52,9 @@ type Person struct {
 type Timestamp struct {
 	time     uint
 	timezone string
+}
+
+type GitRef struct {
+	name   string
+	target GitObjectAccessInfo
 }

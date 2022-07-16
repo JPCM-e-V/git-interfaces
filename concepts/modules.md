@@ -17,7 +17,7 @@ Go module with:
   
   Initializes this module
 
-- struct `GitRef`
+<!-- - struct `GitRef`
 
   `id: string` Id of the ref (20-byte, 40-hexchar sha1-sum of the object)
 
@@ -25,7 +25,7 @@ Go module with:
 
   `type: string` The type of the ref
 
-  `symref-target: string` The target if `type` is `symref`
+  `symref-target: string` The target if `type` is `symref` -->
 
 - function `LsRefs (string): []GitRef`:
 
@@ -35,9 +35,9 @@ Go module with:
 
   Returns the content of the object.
 
-- function `AddObject (string)`:
+- function `AddObject (string, string)`:
 
-  Adds a new object.
+  Adds a new object. Args are id and content.
 
 - function `SetRef (GitRef)`:
 
