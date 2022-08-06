@@ -3,7 +3,7 @@ package gitobjects
 type GitObjectType uint8
 
 const (
-	commit GitObjectType = iota + 1
+	commit GitObjectType = iota
 	blob
 	tree
 	tag
@@ -57,4 +57,35 @@ type Timestamp struct {
 type GitRef struct {
 	name   string
 	target GitObjectAccessInfo
+}
+
+type ErrorStatus uint8
+
+const (
+	userError ErrorStatus = iota
+	dataBaseError
+)
+
+type StatusError interface {
+	error
+	Status() ErrorStatus
+	ConsoleOutput() string
+}
+
+type StatusErrorImpl struct {
+	msg           string
+	status        ErrorStatus
+	consoleOutput string
+}
+
+func (e *StatusErrorImpl) Error() string {
+	return e.msg
+}
+
+func (e *StatusErrorImpl) Status() ErrorStatus {
+	return e.status
+}
+
+func (e *StatusErrorImpl) ConsoleOutput() string {
+	return e.consoleOutput
 }

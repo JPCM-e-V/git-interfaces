@@ -6,7 +6,7 @@ go_library(
     srcs = ["redis-repo.go"],
     importpath = "github.com/JPCM-e-V/git-interfaces/redis-repo",
     visibility = ["//visibility:public"],
-    deps = ["@com_github_go_redis_redis_v8//:redis"],
+    deps = ["@com_github_go_redis_redis_v8//:redis", "//git-objects"],
 )
 
 go_test(
